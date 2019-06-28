@@ -18,8 +18,6 @@ canvas{
   cursor: url(../image/tataki.png), auto;
 }
 </style>
-
-
     </head>
     <body>
       <img src = "http://drive.google.com/uc?export=view&id=1jyuD7K3DpMQ9pmkLyrgY3lr-CGQmCRRj">
@@ -36,8 +34,24 @@ var eventStatus = 0;//0がスタート画面 1がゲーム画面 2がリザル�
 
 let target = document.getElementById("js-target");
 
-var enemy = new Image();
-enemy.src = "image/boss.jpg";
+
+var ememy_max = 20;
+var enemys = [];
+for(i = 0; i < enemy_max; i++){
+  enemys[i] = [enemy_x, enemy_y, enemy_type, muki, pattarn, hp, flag, point, hit];
+}
+
+
+//敵の変数
+var enemy_kobae = new Image();
+var enemy_mid = new Image();
+var enemy_boss = new Image();
+var enemy_red = new Image();
+enemy_kobae.src = "image/コバエ.jpg";
+enemy_mid.src = "image/オオバエ.jpg";
+enemy_boss.src = "image/boss.jpg";
+enemy_red.src = "image/アカバエ.jpg";
+
 //-----------------------------------<操作関係の関数>---------------------------------
 target.addEventListener("click", mouseClick);
 
@@ -100,7 +114,7 @@ function SFlies(){
     //ctx.beginPath();
     enemy_x+=5;
     enemy_y++;
-    ctx.drawImage(enemy, enemy_x, enemy_y);
+    ctx.drawImage(enemy_kobae, enemy_x, enemy_y);
     //ctx.closePath();
     }
 }
