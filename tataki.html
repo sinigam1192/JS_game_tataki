@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <mata charset = "utf-8" />
+        <title>Project TATAKI</title>
+
+<style>
+* {
+    padding: 0;
+    margin: 0;
+}
+canvas{
+    background: #eee;
+    display: block;
+    margin: 0 auto;
+}
+.change {
+  cursor: url(../image/tataki.png), auto;
+}
+</style>
+
+
+    </head>
+    <body>
+      <img src = "http://drive.google.com/uc?export=view&id=1jyuD7K3DpMQ9pmkLyrgY3lr-CGQmCRRj">
+        <div id = "js-target"><canvas id = "myCanvas" width ="480" height ="320"></canvas></div>
+<script>
+  //------------------------------------<基本の定義>------------------------------------
+  //canvasタグの情報を取得する
+  var canvas =document.getElementById("myCanvas");
+  //2D描画コンテキスト
+  //canvasタグに2d描画ができるようにする：引数は2d
+  var ctx = canvas.getContext("2d");
+//-------------------------------------<変数の定義>-------------------------------------
+var eventStatus = 0;//0がスタート画面 1がゲーム画面 2がリザルト画面
+
+let target = document.getElementById("js-target");
+
+var enemy = new Image();
+enemy.src = "../image/boss.jpg";
+//-----------------------------------<操作関係の関数>---------------------------------
+target.addEventListener("click", mouseClick);
+
+function mouseClick(e){
+  var offsetX = e.offsetX;
+  var offsetY = e.offsetY;
+  console.log("X:" + offsetX, "Y:" + offsetY, eventStatus);
+  //スタートを押したらゲーム画面に以降
+  if(eventStatus == 0){
+    if(offsetX > 190 && offsetX < 310 && offsetY > 120 && offsetY < 200){
+    eventStatus = 1;
+    }
+
+  }
+  //
+  /*if(eventStatus == 1){
+    if(offsetX < 190 || offsetX > 310 || offsetY < 120 || offsetY > 200){
+    eventStatus = 0;
+    }
+}
+*/
+}
+
+function operation(){
+
+}
+//-----------------------------------<計算関係の関数>-----------------------------------
+function clac(){
+
+}
+//---------------------------------<イベント管理の関数>---------------------------------
+
+function events(){
+
+}
+//-------------------------------------<動きの制御>-------------------------------------
+//左に進む
+function move1(enemy_x,enemy_y){
+if(enemy_flag == 1)
+  {
+  enemy_x
+  }
+}
+
+
+
+//-----------------------------------<描画関係の関数>-----------------------------------
+function titlelogo(){
+  if(eventStatus == 0){
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("ハエ叩きゲーム", 190 ,140);
+  ctx.fillText("スタート！", 210 ,200);
+  }
+}
+var enemy_x = 0;
+var enemy_y = 0;
+function SFlies(){
+  if(eventStatus == 1){
+    //ctx.beginPath();
+    enemy_x+=5;
+    enemy_y++;
+    ctx.drawImage(enemy, enemy_x, enemy_y);
+    //ctx.closePath();
+    }
+}
+
+function draw(){
+  titlelogo();
+  SFlies();
+}
+//------------------------------------<メインループ>------------------------------------
+function main(){
+  //描画のリセット
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //各機能の関数
+  operation();//操作関係の関数
+  clac();//計算関係の関数
+  events();//イベント管理の関数
+  draw();//描画関係の関数
+}
+
+//main関数を10ミリ秒毎呼び出す
+var interval = setInterval(main, 10);
+
+
+//-----------------------------------<log>-----------------------------------
+target.addEventListener('click', function(e){
+  console.log(e);
+});
+
+
+//-----------------------------------<>-----------------------------------
+
+
+
+  </script>
+      </body>
+  </html>
