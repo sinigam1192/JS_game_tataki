@@ -36,21 +36,23 @@ let target = document.getElementById("js-target");
 
 
 var ememy_max = 20;
-var enemys = [];
-for(i = 0; i < enemy_max; i++){
-  enemys[i] = [enemy_x, enemy_y, enemy_type, muki, pattarn, hp, flag, point, hit];
-}
+var enemy = [20][9];
 
-
+//敵の情報  [enemy_x, enemy_y, enemy_type, muki, pattarn, hp, flag, point, hit]
+var kobae_info = [0, 0, 1, 0, 0, 1, 1, 10, 0];//コバエ情報
+var mid_info = [0, 0, 1, 0, 0, 10, 1, 50, 0];//オオバエ情報
+var boss_info = [0, 0, 1, 0, 0, 50, 1, 500, 0];//ボス情報
+var red_info = [0, 0, 1, 0, 0, 999, 1, 0, 0];//アカバエ情報
 //敵の変数
 var enemy_kobae = new Image();
 var enemy_mid = new Image();
 var enemy_boss = new Image();
 var enemy_red = new Image();
-enemy_kobae.src = "image/コバエ.jpg";
-enemy_mid.src = "image/オオバエ.jpg";
-enemy_boss.src = "image/boss.jpg";
-enemy_red.src = "image/アカバエ.jpg";
+var enemy_cnt = 0;//敵の登録回数
+enemy_kobae.src = "image/コバエ.jpg";//敵フラグナンバー１
+enemy_mid.src = "image/オオバエ.jpg";//敵フラグナンバー２
+enemy_boss.src = "image/boss.jpg";//敵フラグナンバー３
+enemy_red.src = "image/アカバエ.jpg";//敵フラグナンバー４
 //-----------------------------------<操作関係の関数>---------------------------------
 target.addEventListener("click", mouseClick);
 
@@ -63,7 +65,6 @@ function mouseClick(e){
     if(offsetX > 190 && offsetX < 310 && offsetY > 120 && offsetY < 200){
     eventStatus = 1;
     }
-
   }
   //
   /*if(eventStatus == 1){
@@ -83,9 +84,37 @@ function clac(){
 }
 //---------------------------------<イベント管理の関数>---------------------------------
 
+
 function events(){
 
 }
+
+//-------------------------------------<敵の制御>-------------------------------------
+function enter_kobae(){
+  if(enemy_cnt < 50){
+  for(i = 0; i < 20; i++){
+      if(enemy[i][7] == 0){
+        enemy[i][0] = i;
+        enemy[i][1] = i;
+        enemy[i][2] = 0;
+        enemy[i][3] = 0;
+        enemy[i][4] = 0;
+        enemy[i][5] = 0;
+        enemy[i][6] = 1;
+        enemy[i][7] = 1;
+        enemy[i][8] = 10;
+        enemy[i][9] = 0;
+        // 1[enemy_x, 2enemy_y, 3enemy_type, 4muki, 5pattarn, 6hp, 7flag, 8point, 9hit]
+      }
+      SFlies(i);
+    }
+  }
+}
+
+function enemy_control(){
+    enter_kobae();
+}
+
 //-------------------------------------<動きの制御>-------------------------------------
 //左に進む
 function move1(enemy_x,enemy_y){
@@ -106,14 +135,10 @@ function titlelogo(){
   ctx.fillText("スタート！", 210 ,200);
   }
 }
-var enemy_x = 0;
-var enemy_y = 0;
-function SFlies(){
+function SFlies(i){
   if(eventStatus == 1){
     //ctx.beginPath();
-    enemy_x+=5;
-    enemy_y++;
-    ctx.drawImage(enemy_kobae, enemy_x, enemy_y);
+    ctx.drawImage(enemy_kobae, enemy[i][0], enemy[i][1]);
     //ctx.closePath();
     }
 }
@@ -129,6 +154,7 @@ function main(){
   //各機能の関数
   operation();//操作関係の関数
   clac();//計算関係の関数
+  enemy_control();//敵の制御
   events();//イベント管理の関数
   draw();//描画関係の関数
 }
