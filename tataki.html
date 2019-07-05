@@ -32,6 +32,12 @@ canvas{
 //-------------------------------------<変数の定義>-------------------------------------
 var eventStatus = 0;//0がスタート画面 1がゲーム画面 2がリザルト画面
 let target = document.getElementById("js-target");
+
+
+
+
+
+
 var enemyMax = 20;
 var score = 0;
 var enemy_x = 0;
@@ -46,6 +52,11 @@ for( var c = 0; c < enemyMax; c++){
 var random = 0;
 var round = 0;
 
+
+
+
+var ememy_max = 20;
+var enemy = [20][9];
 
 
 //敵の情報  [enemy_x, enemy_y, enemy_type, muki, pattarn, hp, flag, point, hit]
@@ -118,6 +129,7 @@ function clac(){
   randoms(30);
 }
 //---------------------------------<イベント管理の関数>---------------------------------
+
 function events(){
 }
 //-------------------------------------<敵の制御>-------------------------------------
@@ -163,7 +175,38 @@ function enemy_control(){
     enter_kobae();
     enemy_out();
 }
+
 //-------------------------------------<敵の動きの制御>-------------------------------------
+
+
+//-------------------------------------<敵の制御>-------------------------------------
+function enter_kobae(){
+  if(enemy_cnt < 50){
+  for(i = 0; i < 20; i++){
+      if(enemy[i][7] == 0){
+        enemy[i][0] = i;
+        enemy[i][1] = i;
+        enemy[i][2] = 0;
+        enemy[i][3] = 0;
+        enemy[i][4] = 0;
+        enemy[i][5] = 0;
+        enemy[i][6] = 1;
+        enemy[i][7] = 1;
+        enemy[i][8] = 10;
+        enemy[i][9] = 0;
+        // 1[enemy_x, 2enemy_y, 3enemy_type, 4muki, 5pattarn, 6hp, 7flag, 8point, 9hit]
+      }
+      SFlies(i);
+    }
+  }
+}
+
+function enemy_control(){
+    enter_kobae();
+}
+
+//-------------------------------------<動きの制御>-------------------------------------
+
 //左に進む
 function move1(x,y,i){
 if(enemy_flag == 1)
@@ -187,6 +230,14 @@ function game_UI(){
     ctx.fillStyle = "#0095DD";
     ctx.fillText("SCORE:"+ score, 0, 15);
   }
+=======
+function SFlies(i){
+  if(eventStatus == 1){
+    //ctx.beginPath();
+    ctx.drawImage(enemy_kobae, enemy[i][0], enemy[i][1]);
+    //ctx.closePath();
+    }
+
 }
 
 function SFlies(i){//コバエを表示する
