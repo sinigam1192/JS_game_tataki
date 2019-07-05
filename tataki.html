@@ -20,7 +20,7 @@ canvas{
 </style>
     </head>
     <body>
-      <img src = "http://drive.google.com/uc?export=view&id=1jyuD7K3DpMQ9pmkLyrgY3lr-CGQmCRRj">
+      <!--<img src = "http://drive.google.com/uc?export=view&id=1jyuD7K3DpMQ9pmkLyrgY3lr-CGQmCRRj">-->
         <div id = "js-target"><canvas id = "myCanvas" width ="480" height ="320"></canvas></div>
 <script>
   //------------------------------------<基本の定義>------------------------------------
@@ -31,29 +31,40 @@ canvas{
   var ctx = canvas.getContext("2d");
 //-------------------------------------<変数の定義>-------------------------------------
 var eventStatus = 0;//0がスタート画面 1がゲーム画面 2がリザルト画面
-
 let target = document.getElementById("js-target");
-
-
-var ememy_max = 20;
-var enemys = [];
-for(i = 0; i < enemy_max; i++){
-  enemys[i] = [enemy_x, enemy_y, enemy_type, muki, pattarn, hp, flag, point, hit];
+var enemyMax = 20;
+var score = 0;
+var enemy_x = 0;
+var enemy_y = 0;
+var enemy = [];
+var enemyMax = 100;
+for( var c = 0; c < enemyMax; c++){
+  enemy[c] = [];
+  enemy[c] = {x:0, y:0, flag:0, type:0, muki:0, pattarn:0, hp:0, flag:0, point:0, hit:0}
 }
+//ランダムの値を出す変数の宣言
+var random = 0;
+var round = 0;
 
 
+
+//敵の情報  [enemy_x, enemy_y, enemy_type, muki, pattarn, hp, flag, point, hit]
+var kobae_info = [0, 0, 1, 0, 0, 1, 1, 10, 0];//コバエ情報
+var mid_info = [0, 0, 1, 0, 0, 10, 1, 50, 0];//オオバエ情報
+var boss_info = [0, 0, 1, 0, 0, 50, 1, 500, 0];//ボス情報
+var red_info = [0, 0, 1, 0, 0, 999, 1, 0, 0];//アカバエ情報
 //敵の変数
 var enemy_kobae = new Image();
 var enemy_mid = new Image();
 var enemy_boss = new Image();
 var enemy_red = new Image();
-enemy_kobae.src = "image/コバエ.jpg";
-enemy_mid.src = "image/オオバエ.jpg";
-enemy_boss.src = "image/boss.jpg";
-enemy_red.src = "image/アカバエ.jpg";
+var enemy_cnt = 0;//敵の登録回数
+enemy_kobae.src = "image/コバエ.jpg";//敵フラグナンバー１
+enemy_mid.src = "image/オオバエ.jpg";//敵フラグナンバー２
+enemy_boss.src = "image/boss.jpg";//敵フラグナンバー３
+enemy_red.src = "image/アカバエ.jpg";//敵フラグナンバー４
 //-----------------------------------<操作関係の関数>---------------------------------
 target.addEventListener("click", mouseClick);
-
 function mouseClick(e){
   var offsetX = e.offsetX;
   var offsetY = e.offsetY;
@@ -63,40 +74,103 @@ function mouseClick(e){
     if(offsetX > 190 && offsetX < 310 && offsetY > 120 && offsetY < 200){
     eventStatus = 1;
     }
-
   }
-  //
-  /*if(eventStatus == 1){
-    if(offsetX < 190 || offsetX > 310 || offsetY < 120 || offsetY > 200){
-    eventStatus = 0;
+  if(eventStatus == 1){
+      for (var i = 0; i<enemyMax; i++){
+      if(enemy[i].flag == 1 && enemy[i].type == 0){
+        if( enemy[i].x < offsetX && enemy[i].x + 30 > offsetX && enemy[i].y < offsetY && enemy[i].y + 30 > offsetY){
+          enemy[i].flag = 2;
+
+          score += enemy[i].point;
+        }
+      }
     }
-}
-*/
+  }
 }
 
 function operation(){
-
 }
 //-----------------------------------<計算関係の関数>-----------------------------------
-function clac(){
+function randoms(max){
+  random = Math.floor(Math.random() * 500);
+  round = random % max;
+  return round;
+}
 
+//敵の出現する順番
+function enemy_rotation(){
+  if((enemy_cnt % 50) == 0){
+    return 1;//オオバエ出現
+
+  }
+  if((enemy_cnt % 300) == 0){
+    return 2;//boss出現
+
+  }
+if((enemy_cnt % 5) == 0){
+    return 3;//赤ハエ出現
+
+  }
+  return 0;//コバエ出現
+}
+
+function clac(){
+  randoms(30);
 }
 //---------------------------------<イベント管理の関数>---------------------------------
-
 function events(){
-
 }
-//-------------------------------------<動きの制御>-------------------------------------
-//左に進む
-function move1(enemy_x,enemy_y){
-if(enemy_flag == 1)
-  {
-  enemy_x++;
+//-------------------------------------<敵の制御>-------------------------------------
+function enter_kobae(){
+
+  for(i = 0; i < enemyMax; i++){//敵の登録
+    if(enemy[i].flag == 0){
+        enemy[i].x = 0;
+        enemy[i].y = randoms(320) *7;
+        enemy[i].type = 0;
+        enemy[i].muki = randoms(4);
+        enemy[i].pattarn = enemy_rotation();
+        enemy[i].hp = 1;
+        enemy[i].flag = 1;
+        enemy[i].point = 10;
+        enemy[i].hit = 0;
+        enemy_cnt++;
+        // [0enemy_x, 1enemy_y, 2enemy_type, 3muki, 4pattarn, 5hp, 6flag, 7point, 8hit]
+      }
+      if(enemy[i].flag == 1){//生きている敵
+      SFlies(i);
+      enemy[i].x++;
+    }
+      if(enemy[i].flag == 2){//叩き落されるアニメーション
+        SFlies(i);
+        enemy[i].y+= 8;
+    }
   }
 }
 
 
 
+function enemy_out(){
+  for (var i = 0; i < enemyMax; i++){
+    if(enemy[i].flag == 1 || enemy[i].flag == 2){
+    if(enemy[i].x < 0 || enemy[i].x > 480 || enemy[i].y < 0 || enemy[i].y > 320){
+      enemy[i].flag = 0;
+      }
+    }
+  }
+}
+function enemy_control(){
+    enter_kobae();
+    enemy_out();
+}
+//-------------------------------------<敵の動きの制御>-------------------------------------
+//左に進む
+function move1(x,y,i){
+if(enemy_flag == 1)
+  {
+  enemy_x += 0.5;
+  }
+}
 //-----------------------------------<描画関係の関数>-----------------------------------
 function titlelogo(){
   if(eventStatus == 0){
@@ -106,21 +180,43 @@ function titlelogo(){
   ctx.fillText("スタート！", 210 ,200);
   }
 }
-var enemy_x = 0;
-var enemy_y = 0;
-function SFlies(){
+
+function game_UI(){
   if(eventStatus == 1){
-    //ctx.beginPath();
-    enemy_x+=5;
-    enemy_y++;
-    ctx.drawImage(enemy_kobae, enemy_x, enemy_y);
-    //ctx.closePath();
-    }
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("SCORE:"+ score, 0, 15);
+  }
 }
+
+function SFlies(i){//コバエを表示する
+  if(eventStatus == 1){
+    if(enemy[i].pattarn == 0){
+      enemy_x = enemy[i].x;
+      enemy_y = enemy[i].y;
+      ctx.drawImage(enemy_kobae, enemy[i].x, enemy[i].y);
+      }
+    if(enemy[i].pattarn == 1){
+      enemy_x = enemy[i].x;
+      enemy_y = enemy[i].y;
+      ctx.drawImage(enemy_mid, enemy[i].x, enemy[i].y);
+      }
+    if(enemy[i].pattarn == 2){
+      enemy_x = enemy[i].x;
+      enemy_y = enemy[i].y;
+      ctx.drawImage(enemy_boss, enemy[i].x, enemy[i].y);
+      }
+    if(enemy[i].pattarn == 3){
+      enemy_x = enemy[i].x;
+      enemy_y = enemy[i].y;
+      ctx.drawImage(enemy_red, enemy[i].x, enemy[i].y);
+      }
+    }
+  }
 
 function draw(){
   titlelogo();
-  SFlies();
+  game_UI();
 }
 //------------------------------------<メインループ>------------------------------------
 function main(){
@@ -129,24 +225,25 @@ function main(){
   //各機能の関数
   operation();//操作関係の関数
   clac();//計算関係の関数
+  enemy_control();//敵の制御
   events();//イベント管理の関数
   draw();//描画関係の関数
-}
+  console.log("ろーて" + enemy_rotation());
+  console.log("敵カウント" + enemy_cnt);
 
+}
 //main関数を10ミリ秒毎呼び出す
 var interval = setInterval(main, 10);
-
-
 //-----------------------------------<log>-----------------------------------
-target.addEventListener('click', function(e){
-  console.log(e);
+//クリックしたらコンソールログ
+/*target.addEventListener('click', function(e){
+  //console.log(e);
+  console.log(enemy[0].muki);
+  console.log(randoms(100));
 });
-
+*/
 
 //-----------------------------------<>-----------------------------------
-
-
-
   </script>
       </body>
   </html>
