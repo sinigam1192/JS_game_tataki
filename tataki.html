@@ -183,6 +183,7 @@ function events(){
 
 //雑魚敵の出現登録をする関数
 function enter_kobae(){
+<<<<<<< HEAD
 
     if(eventStatus == 1){
 
@@ -222,6 +223,28 @@ function enter_kobae(){
             enemy[i].y+= 8;
           }
           enemy[i].cnt++;
+=======
+  if(eventStatus == 1){
+  for(i = 0; i < enemyMax; i++){//敵の登録
+    if(enemy[i].flag == 0){
+        enemy[i].muki = randoms(4);
+        enemy[i].x = -19;
+        enemy[i].y = randoms(300);
+        enemy[i].type = 0;
+        enemy[i].pattarn = enemy_rotation();
+        enemy[i].hp = 1;
+        enemy[i].flag = 1;
+        enemy[i].point = 10;
+        enemy[i].hit = 0;
+        enemy[i].delay = randoms(200)*5;
+        enemy[i].cnt = 0;
+        enemy[i].speed = randoms(3);
+        if(enemy[i].speed == 3){
+          enemy[i].speed = randoms(4);
+        }
+        if(enemy[i].speed == 0){
+          enemy[i].speed = 1;
+>>>>>>> a7cb5d9cf2fccd4788356c89cd1be4f080612bc2
         }
       }
     }
